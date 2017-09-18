@@ -8,118 +8,56 @@ try:
 except ImportError:
     import Queue as Queue
 
+from alexa_led_pattern import AlexaLedPattern
+from google_home_led_pattern import GoogleHomeLedPattern
 
 class Pixels:
     PIXELS_N = 12
 
-    def __init__(self):
-        self.basis = [0] * 3 * self.PIXELS_N
-        self.basis[0] = 1
-        self.basis[4] = 1
-        self.basis[8] = 2
+    def __init__(self, pattern=GoogleHomeLedPattern):
+        self.pattern = pattern(show=self.show)
 
-        self.colors = [0] * 3 * self.PIXELS_N
         self.dev = apa102.APA102(num_led=self.PIXELS_N)
+        
+        self.power = LED(5)
+        self.power.on()
 
-        self.next = threading.Event()
         self.queue = Queue.Queue()
         self.thread = threading.Thread(target=self._run)
         self.thread.daemon = True
         self.thread.start()
-        self.power = LED(5)
-        self.power.on()
 
     def wakeup(self, direction=0):
         def f():
-            self._wakeup(direction)
+            self.pattern.wakeup(direction)
 
-        self.next.set()
-        self.queue.put(f)
+        self.put(f)
 
     def listen(self):
-        self.next.set()
-        self.queue.put(self._listen)
+        self.put(self.pattern.listen)
 
     def think(self):
-        self.next.set()
-        self.queue.put(self._think)
+        self.put(self.pattern.think)
 
     def speak(self):
-        self.next.set()
-        self.queue.put(self._speak)
+        self.put(self.pattern.speak)
 
     def off(self):
-        self.next.set()
-        self.queue.put(self._off)
+        self.put(self.pattern.off)
+
+    def put(self, func):
+        self.pattern.stop = True
+        self.queue.put(func)
 
     def _run(self):
         while True:
             func = self.queue.get()
+            self.pattern.stop = False
             func()
 
-    def _wakeup(self, direction=0):
-        for i in range(1, 25):
-            colors = [i * v for v in self.basis]
-            self.write(colors)
-            time.sleep(0.01)
-
-        self.colors = colors
-
-    def _listen(self):
-        for i in range(1, 25):
-            colors = [i * v for v in self.basis]
-            self.write(colors)
-            time.sleep(0.01)
-
-        self.colors = colors
-
-    def _think(self):
-        colors = self.colors
-
-        self.next.clear()
-        while not self.next.is_set():
-            colors = colors[3:] + colors[:3]
-            self.write(colors)
-            time.sleep(0.2)
-
-        t = 0.1
-        for i in range(0, 5):
-            colors = colors[3:] + colors[:3]
-            self.write([(v * (4 - i) / 4) for v in colors])
-            time.sleep(t)
-            t /= 2
-
-        # time.sleep(0.5)
-
-        self.colors = colors
-
-    def _speak(self):
-        colors = self.colors
-
-        self.next.clear()
-        while not self.next.is_set():
-            for i in range(5, 25):
-                colors = [(v * i / 24) for v in colors]
-                self.write(colors)
-                time.sleep(0.01)
-
-            time.sleep(0.3)
-
-            for i in range(24, 4, -1):
-                colors = [(v * i / 24) for v in colors]
-                self.write(colors)
-                time.sleep(0.01)
-
-            time.sleep(0.3)
-
-        self._off()
-
-    def _off(self):
-        self.write([0] * 3 * self.PIXELS_N)
-
-    def write(self, colors):
+    def show(self, data):
         for i in range(self.PIXELS_N):
-            self.dev.set_pixel(i, int(colors[3*i]), int(colors[3*i + 1]), int(colors[3*i + 2]))
+            self.dev.set_pixel(i, int(data[4*i + 1]), int(data[4*i + 2]), int(data[4*i + 3]))
 
         self.dev.show()
 
@@ -136,7 +74,7 @@ if __name__ == '__main__':
             pixels.think()
             time.sleep(3)
             pixels.speak()
-            time.sleep(3)
+            time.sleep(6)
             pixels.off()
             time.sleep(3)
         except KeyboardInterrupt:
