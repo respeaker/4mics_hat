@@ -1,9 +1,9 @@
 """
-Record audio from a 6+1 mic array, and then search the keyword "snowboy".
+Record audio from 4 mic array, and then search the keyword "snowboy".
 After finding the keyword, Direction Of Arrival (DOA) is estimated.
 
-The hardware is respeaker 6+1 usb mic array:
-    https://www.seeedstudio.com/ReSpeaker-Mic-Array-Far-field-w--7-PDM-Microphones--p-2719.html
+The hardware is respeaker 4 mic array:
+    https://www.seeedstudio.com/ReSpeaker-4-Mic-Array-for-Raspberry-Pi-p-2941.html
 """
 
 
@@ -15,7 +15,7 @@ from voice_engine.doa_respeaker_4mic_array import DOA
 from pixels import pixels
 
 def main():
-    src = Source(rate=16000, channels=4, frames_size=800)
+    src = Source(rate=16000, channels=4, frames_size=320)
     ch1 = ChannelPicker(channels=4, pick=1)
     kws = KWS()
     doa = DOA(rate=16000)

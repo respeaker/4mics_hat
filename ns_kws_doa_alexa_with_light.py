@@ -1,5 +1,5 @@
 """
-Hands-free Voice Assistant with Snowboy and Alexa Voice Service. The wake-up keyword is "alexa"
+Hands-free Voice Assistant with Snowboy and Alexa Voice Service.
 
 Requirement:
     sudo apt-get install python-numpy
