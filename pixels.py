@@ -27,14 +27,22 @@ class Pixels:
         self.thread.daemon = True
         self.thread.start()
 
+        self.last_direction = None
+
     def wakeup(self, direction=0):
+        self.last_direction = direction
         def f():
             self.pattern.wakeup(direction)
 
         self.put(f)
 
     def listen(self):
-        self.put(self.pattern.listen)
+        if self.last_direction:
+            def f():
+                self.pattern.wakeup(self.last_direction)
+            self.put(f)
+        else:
+            self.put(self.pattern.listen)
 
     def think(self):
         self.put(self.pattern.think)
