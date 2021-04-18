@@ -1,0 +1,9 @@
+version: "3"
+services:
+ respeaker:
+      image: respeaker:latest
+      container_name: respeaker
+      build: .
+      devices:
+        - /dev/spidev0.1:/dev/spidev0.1
+        - /dev/gpiomem:/dev/gpiomem
