@@ -20,9 +20,9 @@ import time
 
 
 class AlexaLedPattern(object):
-    def __init__(self, show=None, number=12):
-        self.pixels_number = number
-        self.pixels = [0] * 4 * number
+    def __init__(self, show=None, num_led=12):
+        self.num_led = num_led
+        self.pixels = [0] * 4 * num_led
 
         if not show or not callable(show):
             def dummy(data):
@@ -33,20 +33,21 @@ class AlexaLedPattern(object):
         self.stop = False
 
     def wakeup(self, direction=0):
-        position = int((direction + 15) / (360 / self.pixels_number)) % self.pixels_number
+        position = int((direction + 15) / (360 / self.num_led)) % self.num_led
 
-        pixels = [0, 0, 0, 24] * self.pixels_number
+        pixels = [0, 0, 0, 24] * self.num_led
         pixels[position * 4 + 2] = 48
-
+        print(pixels)
+        print(position)
         self.show(pixels)
 
     def listen(self):
-        pixels = [0, 0, 0, 24] * self.pixels_number
+        pixels = [0, 0, 0, 24] * self.num_led
 
         self.show(pixels)
 
     def think(self):
-        pixels  = [0, 0, 12, 12, 0, 0, 0, 24] * self.pixels_number
+        pixels  = [0, 0, 12, 12, 0, 0, 0, 24] * self.num_led
 
         while not self.stop:
             self.show(pixels)
@@ -57,7 +58,7 @@ class AlexaLedPattern(object):
         step = 1
         position = 12
         while not self.stop:
-            pixels  = [0, 0, position, 24 - position] * self.pixels_number
+            pixels  = [0, 0, position, 24 - position] * self.num_led
             self.show(pixels)
             time.sleep(0.01)
             if position <= 0:
