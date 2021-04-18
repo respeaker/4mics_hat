@@ -56,8 +56,7 @@ class RainbowLedPattern(object):
 		self.show(pixels)
 
 	def listen(self):
-		pixels = [0, 0, 0, 24] * self.num_led
-		self.show(pixels)
+		self.show(self.pixels)
 
 	def think(self):
 		pixels  = self.convert_to_rgb(self.pixels)
@@ -75,16 +74,16 @@ class RainbowLedPattern(object):
 
 	def speak(self):
 		pixels_hsv = numpy.copy(self.pixels)
-		step = 0.1
+		step = 0.025
 		while not self.stop:
 			pixels_hsv = self.change_sv(pixels_hsv, step)
 			pixels_rgb = self.convert_to_rgb(pixels_hsv)
 			self.show(pixels_rgb)
 			time.sleep(0.1)
-			if pixels_hsv[2] <= 0.1:
+			if pixels_hsv[2] <= 0.5:
 				step = 0.1
 				time.sleep(0.4)
-			elif pixels_hsv[2] >= 0.9:
+			elif pixels_hsv[2] >= 0.8:
 				step = -0.1
 				time.sleep(0.4)
 
