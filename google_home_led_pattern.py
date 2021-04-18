@@ -24,7 +24,8 @@ except ImportError:
 
 
 class GoogleHomeLedPattern(object):
-    def __init__(self, show=None):
+    def __init__(self, show=None, num_led=12):
+        self.num_led = num_led
         self.basis = numpy.array([0] * 4 * 12)
         self.basis[0 * 4 + 1] = 2
         self.basis[3 * 4 + 1] = 1
@@ -43,7 +44,7 @@ class GoogleHomeLedPattern(object):
         self.stop = False
 
     def wakeup(self, direction=0):
-        position = int((direction + 15) / 30) % 12
+        position = int((direction + 15) / 30) % self.num_led
 
         basis = numpy.roll(self.basis, position * 4)
         for i in range(1, 25):
@@ -105,6 +106,6 @@ class GoogleHomeLedPattern(object):
             brightness += step
 
     def off(self):
-        self.show([0] * 4 * 12)
+        self.show([0] * 4 * self.num_led)
 
 
