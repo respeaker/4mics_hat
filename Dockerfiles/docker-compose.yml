@@ -1,9 +1,12 @@
 version: "3"
 services:
- respeaker:
-      image: respeaker:latest-alpine
-      container_name: respeaker
-      build: .
-      devices:
-        - /dev/spidev0.1:/dev/spidev0.1
-        - /dev/gpiomem:/dev/gpiomem
+    respeaker:
+        image: respeaker:latest
+        container_name: respeaker
+        build: .
+        devices:
+            - /dev/spidev0.1:/dev/spidev0.1
+            - /dev/gpiomem:/dev/gpiomem
+        volumes:
+            - /usr/share/alsa:/usr/share/alsa
+            - /etc/alsa:/etc/alsa
