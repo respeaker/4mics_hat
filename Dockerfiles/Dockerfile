@@ -12,17 +12,17 @@ ENV PACKAGES="\
 
 ENV PYTHON_PACKAGES="\
     gpiozero \
-    numpy \
+	numpy \
 	pigpio \
+	pyaudio \
 	spidev \
 	wave \
     "
-
-RUN apk add --virtual build-runtime build-base openblas-dev freetype-dev pkgconfig gfortran linux-headers \
+RUN apk add --virtual build-deps build-base openblas-dev freetype-dev pkgconfig gfortran linux-headers portaudio-dev \
     && ln -s /usr/include/locale.h /usr/include/xlocale.h \
     && pip install --no-cache-dir $PYTHON_PACKAGES \
-    && apk del build-runtime \
-    && apk add --no-cache --virtual build-dependencies $PACKAGES \
+	&& apk del build-deps \
+    && apk add --no-cache --virtual build-runtime $PACKAGES \
     && rm -rf /var/cache/apk/*
 
 WORKDIR /usr/src/app
