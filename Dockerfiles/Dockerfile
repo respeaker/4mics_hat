@@ -18,6 +18,7 @@ ENV PYTHON_PACKAGES="\
 	spidev \
 	wave \
     "
+
 RUN apk add --virtual build-deps build-base openblas-dev freetype-dev pkgconfig gfortran linux-headers portaudio-dev \
     && ln -s /usr/include/locale.h /usr/include/xlocale.h \
     && pip install --no-cache-dir $PYTHON_PACKAGES \

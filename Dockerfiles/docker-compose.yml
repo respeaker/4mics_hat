@@ -1,7 +1,7 @@
 version: "3"
 services:
     respeaker:
-        image: respeaker:latest
+        image: lavirott/respeaker:latest
         container_name: respeaker
         build: .
         devices:
