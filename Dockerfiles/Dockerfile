@@ -1,6 +1,11 @@
 FROM python:3.9.4-alpine
 
 ENV PACKAGES="\
+	alsa-plugins \
+	alsa-plugins-a52 \
+	alsa-plugins-jack \
+	alsa-plugins-lavrate \
+	alsa-plugins-pulse \
     bash \
     git \
     libc6-compat \
