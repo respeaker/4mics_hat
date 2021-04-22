@@ -1,0 +1,13 @@
+version: "3"
+services:
+    respeaker:
+        image: lavirott/respeaker:latest
+        container_name: respeaker
+        build: .
+        devices:
+            - /dev/spidev0.1:/dev/spidev0.1
+            - /dev/gpiomem:/dev/gpiomem
+            - /dev/snd:/dev/snd
+        volumes:
+            - /usr/share/alsa:/usr/share/alsa
+            - /etc/alsa:/etc/alsa
