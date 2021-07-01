@@ -1,0 +1,3 @@
+spidev
+gpiozero
+pyaudio
