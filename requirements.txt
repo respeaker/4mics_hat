@@ -1,3 +1,4 @@
 spidev
 gpiozero
 pyaudio
+numpy
